@@ -23,12 +23,12 @@ export default function LoveLetterModal() {
   const [isRecycling, setIsRecycling] = useState(false);
   const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
 
-  // Track window dimensions for responsive full-screen confetti
+  // Initialize and track window dimensions
   useEffect(() => {
     const updateDimensions = () => {
       setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: typeof window !== "undefined" ? window.innerWidth : 1200,
+        height: typeof window !== "undefined" ? window.innerHeight : 800,
       });
     };
     updateDimensions();
@@ -36,34 +36,35 @@ export default function LoveLetterModal() {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Handle open with smooth animation and 5-second confetti burst
+  // Instant opening: Render modal immediately without blocking delay
   const openModal = () => {
     setIsOpen(true);
-    setShowConfetti(true);
-    setIsRecycling(true);
+    setIsVisible(true);
 
-    setTimeout(() => {
-      setIsVisible(true);
-    }, 20);
+    // Stagger confetti burst onto next frame so modal opens with 0 lag
+    requestAnimationFrame(() => {
+      setShowConfetti(true);
+      setIsRecycling(true);
+    });
 
-    // Trigger 5-second confetti burst
+    // 5-second confetti burst
     setTimeout(() => {
       setIsRecycling(false); // Stop generating new confetti after 5 seconds
       setTimeout(() => {
-        setShowConfetti(false); // Remove canvas after existing particles fall
-      }, 4000);
+        setShowConfetti(false); // Remove canvas once particles clear
+      }, 3500);
     }, 5000);
   };
 
-  // Handle close with smooth animation exit
+  // Snappy, smooth exit animation
   const closeModal = () => {
     setIsVisible(false);
     setTimeout(() => {
       setIsOpen(false);
-    }, 300); // matches transition duration
+    }, 200);
   };
 
-  // Close on Escape key press and manage body scroll lock
+  // Close on Escape key and handle scroll locking
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -93,7 +94,7 @@ export default function LoveLetterModal() {
             width={windowDimensions.width}
             height={windowDimensions.height}
             recycle={isRecycling}
-            numberOfPieces={windowDimensions.width < 640 ? 160 : 300}
+            numberOfPieces={windowDimensions.width < 640 ? 140 : 280}
             gravity={0.25}
             colors={[
               "#f43f5e",
@@ -113,7 +114,7 @@ export default function LoveLetterModal() {
       <div className="flex justify-center my-6 sm:my-8 px-4">
         <button
           onClick={openModal}
-          className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-300 px-6 sm:px-8 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white shadow-[0_8px_25px_rgba(244,114,182,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_35px_rgba(244,114,182,0.6)] active:scale-95 w-full max-w-xs sm:w-auto"
+          className="group relative inline-flex items-center justify-center gap-2.5 sm:gap-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-300 px-6 sm:px-8 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white shadow-[0_8px_25px_rgba(244,114,182,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_35px_rgba(244,114,182,0.6)] active:scale-95 touch-manipulation w-full max-w-xs sm:w-auto"
           aria-label="Unlock Your Birthday Message"
         >
           <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-white/20 text-white text-xs sm:text-sm group-hover:scale-110 transition-transform">
@@ -137,31 +138,31 @@ export default function LoveLetterModal() {
         <div
           role="dialog"
           aria-modal="true"
-          className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 transition-opacity duration-300 ${
+          className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 transition-opacity duration-200 ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
         >
           {/* Backdrop Blur Overlay */}
           <div
             onClick={closeModal}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-md transition-all duration-300"
+            className="fixed inset-0 bg-slate-900/45 backdrop-blur-md transition-all duration-200"
           />
 
           {/* Centered Digital Handwritten Letter Container */}
           <div
-            className={`relative w-full max-w-lg transform transition-all duration-300 ease-out z-10 ${
+            className={`relative w-full max-w-lg transform transition-all duration-200 ease-out z-10 ${
               isVisible
                 ? "scale-100 translate-y-0 opacity-100"
-                : "scale-95 translate-y-4 opacity-0"
+                : "scale-95 translate-y-3 opacity-0"
             }`}
           >
-            {/* Outer Letter Shadow & Border Wrapper */}
-            <div className="relative max-h-[85vh] overflow-y-auto rounded-3xl bg-gradient-to-b from-[#fffefc] to-[#fff7f9] p-5 sm:p-8 md:p-10 shadow-[0_25px_70px_rgba(244,114,182,0.3),0_10px_30px_rgba(0,0,0,0.15)] border border-pink-200 text-slate-800">
+            {/* Outer Letter Shadow & Border Wrapper (Mobile Scroll Safe) */}
+            <div className="relative max-h-[85vh] sm:max-h-[88vh] overflow-y-auto overscroll-contain rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#fffefc] to-[#fff7f9] p-4 sm:p-7 md:p-9 shadow-[0_20px_60px_rgba(244,114,182,0.3),0_8px_25px_rgba(0,0,0,0.12)] border border-pink-200 text-slate-800">
               
               {/* Clean 'X' Close Icon in Top Right */}
               <button
                 onClick={closeModal}
-                className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 z-20 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-pink-200 bg-white/90 text-slate-600 backdrop-blur-sm transition-all duration-200 hover:border-pink-300 hover:bg-pink-50 hover:text-pink-700 hover:scale-105 active:scale-95 shadow-xs"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-pink-200 bg-white/95 text-slate-600 backdrop-blur-sm transition-all duration-200 hover:border-pink-300 hover:bg-pink-50 hover:text-pink-700 hover:scale-105 active:scale-95 touch-manipulation shadow-xs"
                 aria-label="Close modal"
               >
                 <svg
@@ -175,17 +176,17 @@ export default function LoveLetterModal() {
                 </svg>
               </button>
 
-              {/* Decorative Wax Seal Accent */}
-              <div className="flex items-center justify-between border-b border-pink-100 pb-3 sm:pb-4 mb-4 sm:mb-6">
+              {/* Exact Space for Heading: sealed with love from zaman */}
+              <div className="flex items-center justify-between border-b border-pink-100 pb-3 mb-4 sm:mb-5 pr-10 sm:pr-12">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-600 text-white font-serif text-xs font-bold shadow-xs ring-2 ring-pink-200">
-                    R
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-600 text-white font-serif text-xs font-bold shadow-xs ring-2 ring-pink-200">
+                    Z
                   </div>
-                  <span className="text-[10px] sm:text-[11px] font-mono tracking-wider sm:tracking-widest text-pink-900/60 uppercase">
-                    Sealed with Love
-                  </span>
+                  <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-rose-600">
+                    sealed with love from zaman
+                  </h3>
                 </div>
-                <span className="text-[11px] sm:text-xs font-mono text-pink-900/50 pr-7 sm:pr-0">
+                <span className="text-[10px] sm:text-xs font-mono text-pink-900/50 shrink-0">
                   OCTOBER 2026
                 </span>
               </div>
@@ -194,45 +195,53 @@ export default function LoveLetterModal() {
               <div className="space-y-3 sm:space-y-4">
                 {/* Salutation */}
                 <h2
-                  className={`${playfair.className} text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight`}
+                  className={`${playfair.className} text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight pt-0.5`}
                 >
                   Dearest Rasha,
                 </h2>
 
-                {/* Body Text Styled as Handwritten Prose */}
+                {/* Body Text Styled as Handwritten Calligraphy */}
                 <div
-                  className={`${dancingScript.className} text-lg sm:text-xl md:text-2xl leading-relaxed sm:leading-loose text-slate-800 space-y-3 sm:space-y-4 pt-1`}
+                  className={`${dancingScript.className} text-base sm:text-lg md:text-2xl leading-relaxed sm:leading-loose text-slate-800 space-y-2.5 sm:space-y-3.5 pt-0.5`}
                 >
                   <p>
-                    On this very special day, I wanted to take a quiet moment to celebrate the wonderful,
-                    luminous person that you are.
+                    On this beautiful day, I wanted to whisper something straight from my heart to yours.
                   </p>
+                  
                   <p>
-                    Your kindness brings warmth to every space you enter, and your strength inspires
-                    everyone fortunate enough to walk alongside you. May this upcoming year be generous
-                    with its laughter, gentle with its challenges, and brimming with moments that take your
-                    breath away.
+                    You are beyond adorable and so wonderfully cute in everything you do—your laugh, your
+                    smile, the sparkle in your eyes that effortlessly lights up my entire world.
                   </p>
+
+                  <p className="font-semibold text-rose-700">
+                    I need you to know this truth without a single doubt: you are genuinely the most
+                    beautiful, breathtaking girl in this universe, and across all other universes—both the
+                    ones that have been found, and every universe that is yet to be found.
+                  </p>
+
                   <p>
-                    Never forget how deeply appreciated and celebrated you are—not just today, but in every
-                    single chapter yet to be written.
+                    There has never been, and there will never be, anyone as truly magical and precious as
+                    you. Having you in my life is the greatest gift, and celebrating you today is my greatest
+                    joy.
+                  </p>
+                  
+                  <p>
+                    May your birthday and the year ahead be as endless, bright, and utterly sweet as the
+                    love I hold for you.
                   </p>
                 </div>
 
-                {/* Sign-off */}
+                {/* Exact Sign-off: with all my love zaman */}
                 <div className="pt-3 sm:pt-4 border-t border-pink-100 flex flex-col items-end">
-                  <p className="text-[10px] sm:text-xs font-mono tracking-wider text-pink-900/60 uppercase">
-                    With warmest affection & joy,
-                  </p>
                   <p
-                    className={`${dancingScript.className} text-2xl sm:text-3xl font-bold text-rose-600 mt-0.5`}
+                    className={`${dancingScript.className} text-xl sm:text-2xl md:text-3xl font-bold text-rose-600 tracking-wide`}
                   >
-                    Happy Birthday Always ♡
+                    with all my love zaman
                   </p>
                 </div>
               </div>
 
-              {/* Bottom Subtle Paper Lines Overlay */}
+              {/* Bottom Subtle Paper Pattern Overlay */}
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#ec489910_1px,transparent_1px)] [background-size:16px_16px] opacity-50" />
             </div>
           </div>
