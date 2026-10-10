@@ -25,9 +25,9 @@ const quizQuestions: QuestionItem[] = [
   },
   {
     id: 2,
-    question: "Whose smile completely lights up my day the second I see it?",
-    optionA: "Yours",
-    optionB: "Without a doubt, yours",
+    question: "Whose breathtaking and heavenly beauty outshines every star in the cosmos?",
+    optionA: "Rasha, the prettiest girl in existence",
+    optionB: "Yours, the most gorgeous girl ever",
   },
   {
     id: 3,
@@ -37,9 +37,9 @@ const quizQuestions: QuestionItem[] = [
   },
   {
     id: 4,
-    question: "Who manages to make my heart skip a beat just by existing?",
-    optionA: "My amazing girlfriend",
-    optionB: "Definitely you",
+    question: "Who is officially guilty of being way too cute and completely stealing my heart forever?",
+    optionA: "Rasha, guilty as charged",
+    optionB: "You, the prettiest girl alive",
   },
   {
     id: 5,
