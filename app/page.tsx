@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Playfair_Display } from "next/font/google";
 import LoveLetterModal from "./LoveLetterModal";
 import AudioPlayer from "./AudioPlayer";
+import BirthdayQuiz from "./BirthdayQuiz";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -67,7 +68,7 @@ export default function Home() {
         ))}
       </div>
 
-      {/* Hero Section: Centered in the Viewport */}
+      {/* Screen 1: Hero Section (Centered in Viewport) */}
       <section className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         
         {/* Floating Glassmorphism Card */}
@@ -124,11 +125,11 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Minimalist Bouncy Arrow Below the Text */}
+              {/* Minimalist Bouncy Arrow Below the Text pointing to Birthday Message */}
               <div className="mt-8 sm:mt-10 pt-2 sm:pt-4 flex flex-col items-center">
                 <a
-                  href="#tribute"
-                  aria-label="Scroll down"
+                  href="#birthday-message"
+                  aria-label="Scroll down to birthday message"
                   className="group inline-flex flex-col items-center gap-1.5 text-slate-400 transition-colors duration-300 hover:text-pink-600"
                 >
                   <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] text-slate-500 uppercase group-hover:text-pink-600 transition-colors">
@@ -153,10 +154,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Scroll Destination: Birthday Tributes & Wishes Section */}
+      {/* Screen 2: Birthday Message Section (Visible immediately after scrolling past first screen) */}
+      <section
+        id="birthday-message"
+        className="relative z-10 mx-auto max-w-5xl px-4 pt-16 pb-8 sm:pt-24 sm:pb-12 text-center border-t border-pink-100"
+      >
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-100/70 border border-pink-200/80 text-[11px] font-semibold uppercase tracking-wider text-pink-700 mb-3">
+          💌 For Your Eyes Only
+        </div>
+        <h2
+          className={`${playfair.className} text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight`}
+        >
+          A Special Message For Rasha
+        </h2>
+        <p className="mt-2 text-slate-600 text-xs sm:text-sm md:text-base max-w-md mx-auto">
+          A heartfelt letter sealed with love, written just for you on your special day.
+        </p>
+
+        {/* Unlock Birthday Message Pill Button & Modal */}
+        <div className="mt-4 sm:mt-6">
+          <LoveLetterModal />
+        </div>
+      </section>
+
+      {/* Screen 3: Birthday Tributes & Wishes Section */}
       <section
         id="tribute"
-        className="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8 border-t border-pink-100"
+        className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:py-16 sm:px-6 lg:px-8 border-t border-pink-100"
       >
         <div className="text-center mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-100/70 border border-pink-200/80 text-[11px] font-semibold uppercase tracking-wider text-pink-700 mb-3">
@@ -218,9 +242,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Unlock Birthday Message Section */}
-        <div className="mt-12 sm:mt-16 text-center">
-          <LoveLetterModal />
+        {/* Screen 4: Interactive Birthday Quiz Section (At the Bottom) */}
+        <div className="mt-14 sm:mt-20">
+          <BirthdayQuiz />
         </div>
 
         {/* Footer */}
